@@ -1,5 +1,3 @@
-// std::fs::Metadata.is_dir() will confirm that the path points to a directory.
-
 fn arg_is_a_dir_path(arg: &str) -> bool {
     let dir_metadata = std::fs::metadata(&arg);
     match dir_metadata {
