@@ -1,16 +1,25 @@
 // std::fs::Metadata.is_dir() will confirm that the path points to a directory.
 
-fn main() {
-    let path_arg = std::env::args()
-        .skip(2)
-        .rev()
-        .next()
-        .unwrap_or(".".to_string());
-
-    let dir_metadata = std::fs::metadata(&path_arg).expect("Could not open path!");
-
-    match dir_metadata.is_dir() {
-        true => println!("Path argument '{}' is a directory! OuO", path_arg),
-        false => println!("Path argument '{}' is not a directory! OnO", path_arg),
+fn arg_is_a_dir_path(arg: &str) -> bool {
+    let dir_metadata = std::fs::metadata(&arg);
+    match dir_metadata {
+        Ok(md) => md.is_dir(),
+        Err(_) => false,
     }
+}
+
+fn get_path_arg() -> String {
+    for arg in std::env::args().skip(2).rev() {
+        if arg_is_a_dir_path(&arg) {
+            return arg.clone()
+        }
+    }
+
+    // FIXUP: Would using std::env::current_dir() be better here?
+    ".".to_string()
+}
+
+fn main() {
+    let path_arg = get_path_arg();
+    println!("Path argument is: {}", path_arg);
 }
